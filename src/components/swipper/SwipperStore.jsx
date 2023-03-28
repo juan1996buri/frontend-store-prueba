@@ -11,6 +11,25 @@ import logo from "../../assets/logo.png";
 // import required modules
 import { Autoplay, Pagination, Navigation } from "swiper";
 
+const dataStore = [
+  {
+    id: 1,
+    img: "https://www.mujerde10.com/wp-content/uploads/2021/08/espalda-ancha.jpg",
+  },
+  {
+    id: 2,
+    img: "https://tiempo.hn/wp-content/uploads/2021/10/Espalda-1-scaled.jpg",
+  },
+  {
+    id: 3,
+    img: "https://mujersaludable10.com/wp-content/uploads/2021/09/outfits-espalda-ancha.png",
+  },
+  {
+    id: 4,
+    img: "https://i.ytimg.com/vi/SADHy9-NFSc/maxresdefault.jpg",
+  },
+];
+
 const SwipperStore = () => {
   return (
     <section>
@@ -29,13 +48,9 @@ const SwipperStore = () => {
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper"
       >
-        {[1, 2, 3, 4].map((item, index) => (
-          <SwiperSlide key={index} className="h-96">
-            <img
-              alt=""
-              src="https://media.glamour.mx/photos/61909f30f5ed039ceea86de0/master/w_1600,c_limit/177689.jpg"
-              className="h-full w-full object-cover"
-            />
+        {dataStore.map((item, index) => (
+          <SwiperSlide key={index} className="md:h-96 h-64">
+            <img alt="" src={item.img} className="h-full w-full object-cover" />
           </SwiperSlide>
         ))}
       </Swiper>
