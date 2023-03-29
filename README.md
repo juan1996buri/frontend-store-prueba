@@ -16,7 +16,7 @@ Tienda en linea de venta de ropa , construida en React y nest-js
 
 ### Pre-requisitos 🔧
 
-Esta Aplicación consume una api hecha en nest-js que esta en este  [repo](https://github.com/juan1996buri/backend-store-prueba).
+Esta Aplicación consume una api echa en nest-js que esta en este  [repo](https://github.com/juan1996buri/backend-store-prueba).
 
 ### Screenshot 🖥️️
 
