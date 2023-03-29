@@ -1,10 +1,12 @@
-# Ecommerce React
+# Ecommerce Reactjs con vite
 
 Tienda en linea de venta de ropa , construida en React y nest-js
 
 ## Instrucciones de instalación 🚀
 
-_En el directorio del proyecto, puede ejecutar:._
+### `npm install`
+
+## Instrucciones de ejecución 🚀
 
 ### `npm run dev`
 
