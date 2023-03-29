@@ -1,7 +1,6 @@
 # Ecommerce React
 
-Tienda el linea de venta de hardware , construida en React y Laravel
-[E-commerce-react](https://react-ecomerce-pc.vercel.app).
+Tienda en linea de venta de ropa , construida en React y nest-js
 
 ## Instrucciones de instalación 🚀
 
