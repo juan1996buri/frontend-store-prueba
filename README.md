@@ -2,11 +2,11 @@
 
 Tienda en linea de venta de ropa , construida en React y nest-js
 
-## Instrucciones de instalación 🚀
+## Instruccion de instalación 🚀
 
 ### `npm install`
 
-## Instrucciones de ejecución 🚀
+## Instruccion de ejecución 🚀
 
 ### `npm run dev`
 
