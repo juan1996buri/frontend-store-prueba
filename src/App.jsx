@@ -1,14 +1,11 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import Categories from "./components/categories/Categories";
 import Footer from "./components/footer/Footer";
 import Header from "./components/header/Header";
-import PopularProducts from "./components/popularProducts/PopularProducts";
-import Products from "./components/product-list/Products";
-import SwipperStore from "./components/swipper/SwipperStore";
-import Testimonials from "./components/testimonial/Testimonials";
 import Home from "./components/home/Home";
 import ProductById from "./components/product/ProductById";
+import Login from "./components/login/Login";
+import Register from "./components/register/Register";
 
 const App = () => {
   return (
@@ -19,7 +16,9 @@ const App = () => {
       <div className="pt-14">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/:id" element={<ProductById />} />
+          <Route path="/product/:id" element={<ProductById />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
         <Footer />
       </div>

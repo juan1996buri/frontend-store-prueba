@@ -1,21 +1,28 @@
 import { NavLink } from "react-router-dom";
 
-const ProductCard = () => {
+const ProductCard = ({ product }) => {
   return (
-    <NavLink to={"/1"} className="rounded-lg overflow-hidden shadow-lg w-full">
+    <NavLink
+      to={`/product/${product.id}`}
+      className="rounded-lg overflow-hidden shadow-lg w-full"
+    >
       <div className="h-56 overflow-hidden ">
         <img
-          src="https://media.glamour.mx/photos/61909f30f5ed039ceea86de0/master/w_1600,c_limit/177689.jpg"
+          src={product?.image}
           className="h-full w-full object-cover hover:scale-125 transition-all duration-300"
         />
       </div>
       <div className="py-4 mx-2">
         <h3 className="text-gray-800 text-xl font-medium mb-2">
-          Nombre del Producto
+          {product?.name}
         </h3>
-        <p className="text-gray-600 text-sm">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Similique
-        </p>
+        <div className="flex justify-between">
+          <h3 className="text-red-600 font-semibold">${product?.price}</h3>
+          <div className="bg-intenseGreen">
+            <h3 className="text-white py-1 px-2">stock {product.stock}</h3>
+          </div>
+        </div>
+        <p className="text-gray-600 text-sm">{product.description}</p>
       </div>
     </NavLink>
   );

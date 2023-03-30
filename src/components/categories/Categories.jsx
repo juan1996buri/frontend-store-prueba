@@ -1,16 +1,24 @@
-import React, { useRef, useState } from "react";
-// Import Swiper React components
+import React, { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
+import { FreeMode } from "swiper";
+import { getAllCategory } from "../../services/CategoryService";
+import CategoryCard from "./CategoryCard";
 
-// import required modules
-import { FreeMode, Pagination } from "swiper";
-//width: "80%"
 const Categories = () => {
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    try {
+      getAllCategory().then((state) => {
+        if (state.statusCode === 200) {
+          setCategories(state?.data);
+        } else if (state.statusCode === 400) {
+        }
+      });
+    } catch (error) {}
+  }, []);
   return (
     <section>
       <Swiper
@@ -31,14 +39,9 @@ const Categories = () => {
           },
         }}
       >
-        {[1, 2, 3, 5, 6, 7].map((category, index) => (
+        {categories?.map((category, index) => (
           <SwiperSlide key={index}>
-            <img
-              alt=""
-              src="https://media.glamour.mx/photos/61909f30f5ed039ceea86de0/master/w_1600,c_limit/177689.jpg"
-              className=" h-full  w-full object-cover"
-              style={{ height: "7rem" }}
-            />
+            <CategoryCard category={category} />
           </SwiperSlide>
         ))}
       </Swiper>

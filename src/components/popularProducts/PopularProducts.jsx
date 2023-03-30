@@ -1,15 +1,40 @@
-import React, { useRef, useState } from "react";
-// Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-// import required modules
-import { Autoplay, Pagination, Navigation, FreeMode } from "swiper";
+import { Autoplay, Pagination, Navigation } from "swiper";
 import SectionTitle from "../section-title/SectionTitle";
+import PopularProductCard from "./PopularProductCard";
+
+const popularProducts = [
+  {
+    name: "Terno de tela",
+    img: "https://us.123rf.com/450wm/prometeus/prometeus2101/prometeus210100755/162524944-hombre-modelo-de-moda-con-cabello-oscuro-posando-en-el-estudio-con-ropa-elegante-en-un-fondo-gris.jpg?ver=6",
+    price: 80,
+  },
+  {
+    name: "Chompa de manga larga",
+    img: "https://img.freepik.com/fotos-premium/retrato-moda-mujer-joven-ropa-elegante-calle_338491-5347.jpg?w=2000",
+    price: 40,
+  },
+  {
+    name: "Vestido negro ",
+    img: "https://img.freepik.com/foto-gratis/linda-chica-joven-peinado-ondulado-oscuro-maquillaje-brillante-vestido-seda-chaqueta-negra-sosteniendo-gafas-sol-manos-mirando-otro-lado-contra-pared-edificio-beige_197531-24462.jpg?w=2000",
+    price: 100,
+  },
+  {
+    name: "Vestido de verano",
+    img: "https://i.pinimg.com/564x/b7/3f/d9/b73fd9c4784a5bcb7dcc56b4b860e34a.jpg",
+    price: 120,
+  },
+  {
+    name: "Vestido de negro brillante",
+    img: "https://ae01.alicdn.com/kf/HTB1YP.mOxYaK1RjSZFnq6y80pXaA/Mini-vestido-de-fiesta-corto-a-la-moda-para-mujer-vestido-sin-tirantes-de-l-nea.jpg_640x640.jpg",
+    price: 120,
+  },
+];
 
 const PopularProducts = () => {
   return (
@@ -38,14 +63,9 @@ const PopularProducts = () => {
           },
         }}
       >
-        {[1, 2, 3, 5, 6, 7].map((category, index) => (
+        {popularProducts?.map((popular, index) => (
           <SwiperSlide key={index}>
-            <img
-              alt=""
-              src="https://media.glamour.mx/photos/61909f30f5ed039ceea86de0/master/w_1600,c_limit/177689.jpg"
-              className=" h-full  w-full object-cover"
-              style={{ height: "10rem" }}
-            />
+            <PopularProductCard popular={popular} />
           </SwiperSlide>
         ))}
       </Swiper>

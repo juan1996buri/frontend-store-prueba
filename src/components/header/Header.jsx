@@ -1,16 +1,17 @@
-import React from "react";
+import MenuIcon from "@mui/icons-material/Menu";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import BasicMenu from "./BasicMenu";
 
 const Header = () => {
   return (
-    <header className="flex w-full bg-deepBlue justify-between px-10 h-full">
+    <header className="flex w-full bg-intenseGreen justify-between px-10 h-full">
       <div className="flex  items-center gap-2">
-        <div className="h-1 bg-brightTurquoise w-6" />
-        <div className="h-1 bg-brightTurquoise w-6" />
+        <div className="h-[1px] bg-softMint w-12" />
+        <div className="h-[1px] bg-softMint w-12" />
       </div>
       <div className="flex gap-2">
-        <h1>1</h1>
-        <h1>2</h1>
-        <h1>3</h1>
+        <BasicMenu />
       </div>
     </header>
   );

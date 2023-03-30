@@ -1,15 +1,11 @@
-import React from "react";
 import SectionTitle from "../section-title/SectionTitle";
-// Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
 
-// import required modules
-import { FreeMode, Pagination } from "swiper";
+import { FreeMode } from "swiper";
 
 const Testimonials = () => {
   return (
@@ -38,14 +34,17 @@ const Testimonials = () => {
           <div className="w-40 flex flex-col justify-center items-center">
             <div className=" rounded-full  md:w-full md:h-40 w-56 h-56 flex justify-center items-center shadow-lg overflow-hidden">
               <img
-                src="https://media.glamour.mx/photos/61909f30f5ed039ceea86de0/master/w_1600,c_limit/177689.jpg"
-                className="h-full"
+                src="https://images.hola.com/imagenes/estar-bien/20221018219233/buenas-personas-caracteristicas/1-153-242/getty-chica-feliz-t.jpg?tx=w_680"
+                className="h-full object-cover"
               />
             </div>
-            <h3 className="text-gray-800 text-xl font-medium mb-2">Nombre</h3>
-            <p className="text-gray-600 text-sm">
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-              Similique
+            <h3 className="text-gray-800 text-xl font-medium mb-2">
+              Ana Sánchez
+            </h3>
+            <p className="text-gray-600 text-sm text-justify">
+              ¡Me encanta comprar en esta tienda en línea! Siempre encuentro la
+              ropa más moderna y a la moda. Además, la atención al cliente es
+              excelente.
             </p>
           </div>
         </SwiperSlide>
@@ -53,14 +52,17 @@ const Testimonials = () => {
           <div className="w-40 flex flex-col justify-center items-center">
             <div className=" rounded-full  md:w-48 md:h-48 w-56 h-56  flex justify-center items-center shadow-lg overflow-hidden">
               <img
-                src="https://media.glamour.mx/photos/61909f30f5ed039ceea86de0/master/w_1600,c_limit/177689.jpg"
-                className="h-full"
+                src="https://www.hakunamatata.com.co/wp-content/uploads/2022/11/actitudes-positivas-vida.jpg"
+                className="h-full object-cover"
               />
             </div>
-            <h3 className="text-gray-800 text-xl font-medium mb-2">Nombre</h3>
-            <p className="text-gray-600 text-sm">
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-              Similique
+            <h3 className="text-gray-800 text-xl font-medium mb-2">
+              Carlos Rodríguez
+            </h3>
+            <p className="text-gray-600 text-sm text-justify">
+              Comprar en esta tienda es una experiencia increíble. Tienen una
+              amplia variedad de ropa moderna y de alta calidad a precios
+              accesibles. Definitivamente recomiendo esta tienda
             </p>
           </div>
         </SwiperSlide>
@@ -68,14 +70,18 @@ const Testimonials = () => {
           <div className="w-40 flex flex-col justify-center items-center">
             <div className=" rounded-full md:w-full md:h-40 w-56 h-56  flex justify-center items-center shadow-lg overflow-hidden">
               <img
-                src="https://media.glamour.mx/photos/61909f30f5ed039ceea86de0/master/w_1600,c_limit/177689.jpg"
-                className="h-full"
+                src="https://img.freepik.com/foto-gratis/retrato-joven-rubio-mujer_273609-12060.jpg"
+                className="h-full object-cover"
               />
             </div>
-            <h3 className="text-gray-800 text-xl font-medium mb-2">Nombre</h3>
-            <p className="text-gray-600 text-sm">
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-              Similique
+            <h3 className="text-gray-800 text-xl font-medium mb-2">
+              Laura García
+            </h3>
+            <p className="text-gray-600 text-sm text-justify">
+              Desde que descubrí esta tienda en línea, mi guardarropa ha
+              mejorado significativamente. La ropa es cómoda, moderna y se
+              ajusta perfectamente. ¡Gracias por hacer que el shopping sea tan
+              fácil!
             </p>
           </div>
         </SwiperSlide>
