@@ -2,8 +2,11 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ActionAlerts from "../ActionAlerts/ActionAlerts";
 import { postAuthLogin } from "../../services/AuthService";
+import { useDispatch } from "react-redux";
+import { userAuthentification } from "../../features/authSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigate();
   const [alert, setAlert] = useState({
     message: "",
@@ -24,7 +27,12 @@ const Login = () => {
       try {
         await postAuthLogin(user).then((state) => {
           if (state.statusCode === 200) {
-            window.localStorage.setItem("token", state.data.token);
+            dispatch(
+              userAuthentification({
+                user: state.data.user,
+                token: state.data.token,
+              })
+            );
             setIsActiveAlert(true);
             setAlert({
               message: "El usuario se encuentra logeado con exito",

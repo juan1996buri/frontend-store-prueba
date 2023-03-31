@@ -1,6 +1,3 @@
-import MenuIcon from "@mui/icons-material/Menu";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import BasicMenu from "./BasicMenu";
 
 const Header = () => {
