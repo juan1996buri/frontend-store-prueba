@@ -17,7 +17,11 @@ export const postProduct = async (formData) => {
 };
 
 export const updateProduct = async (formData) => {
-  return await instance.put(`product`, formData).then((state) => {
-    return state.data;
-  });
+  return await instance
+    .put(`product`, formData, {
+      headers: { "Content-Type": "application/json" },
+    })
+    .then((state) => {
+      return state.data;
+    });
 };

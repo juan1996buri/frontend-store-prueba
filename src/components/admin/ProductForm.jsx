@@ -7,9 +7,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
 import { useEffect, useState } from "react";
 import {
   getAllProduct,
@@ -18,21 +15,6 @@ import {
 } from "../../services/ProductoService";
 import { getAllCategory } from "../../services/CategoryService";
 import ActionAlerts from "../ActionAlerts/ActionAlerts";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  zIndex: 10,
-};
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -54,14 +36,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
 export default function ProductForm() {
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const [open, setOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [rows, setRow] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -98,6 +73,7 @@ export default function ProductForm() {
     getAllCategory().then((state) => {
       if (state.statusCode === 200) {
         setCategories(state.data);
+        setCategory(state.data[0].id);
       }
     });
   }, []);
@@ -118,11 +94,15 @@ export default function ProductForm() {
         formData.append("description", product.description);
         formData.append("stock", product.stock);
         formData.append("category[id]", Number(category));
+
         formData.append("image", selectedImage);
 
         try {
           await postProduct(formData).then((state) => {
             if (state.statusCode === 200) {
+              state.data.category = categories.find(
+                (item) => item.id == category
+              );
               setRow([...rows, state.data]);
               setProduct({
                 ...product,
@@ -169,7 +149,6 @@ export default function ProductForm() {
         try {
           await updateProduct(formData).then((state) => {
             if (state.statusCode === 200) {
-              console.log(category);
               const newList = rows.map((item) => {
                 if (item.id === product.id) {
                   return {
@@ -181,7 +160,7 @@ export default function ProductForm() {
                     price: product.price,
                     stock: product.stock,
 
-                    category,
+                    category: categories.find((item) => item.id == category),
                   };
                 } else {
                   return item;
@@ -190,8 +169,6 @@ export default function ProductForm() {
 
               console.log(newList);
               setRow(newList);
-
-              // setRow([...newList]);
 
               setProduct({
                 ...product,
@@ -339,7 +316,6 @@ export default function ProductForm() {
                   value={category}
                   onChange={(e) => handleCategory(e)}
                 >
-                  <option>Seleccione una categoría</option>
                   {categories?.map((category) => (
                     <option value={category.id} key={category.id}>
                       {category.name}
@@ -372,7 +348,7 @@ export default function ProductForm() {
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="submit"
               >
-                Guardar
+                {editProduct ? "Editar" : "Guardar"}
               </button>
             </div>
           </form>

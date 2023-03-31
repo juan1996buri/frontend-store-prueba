@@ -1,9 +1,7 @@
-import axios from "axios";
-
-const url = "http://[::1]:3000/api/v1/";
+import instance from "./configAxios";
 
 export const getAllCategory = async () => {
-  return await axios.get(`${url}category`).then((state) => {
+  return await instance.get(`category`).then((state) => {
     return state.data;
   });
 };
