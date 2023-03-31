@@ -10,9 +10,14 @@ export const getProductById = async (productId) => {
     return state.data;
   });
 };
-export const postProduct = async (product) => {
-  console.log(product);
-  return await instance.post(`product`, product).then((state) => {
+export const postProduct = async (formData) => {
+  return await instance.post(`product`, formData).then((state) => {
+    return state.data;
+  });
+};
+
+export const updateProduct = async (formData) => {
+  return await instance.put(`product`, formData).then((state) => {
     return state.data;
   });
 };

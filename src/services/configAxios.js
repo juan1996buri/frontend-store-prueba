@@ -8,7 +8,7 @@ const instance = axios.create({
   withCredentials: true,
   headers: {
     "Access-Control-Allow-Origin": "*",
-    "Content-Type": "application/x-www-form-urlencoded",
+    "content-type": "multipart/form-data",
   },
 });
 

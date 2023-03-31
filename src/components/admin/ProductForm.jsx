@@ -11,8 +11,13 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { useEffect, useState } from "react";
-import { getAllProduct, postProduct } from "../../services/ProductoService";
+import {
+  getAllProduct,
+  postProduct,
+  updateProduct,
+} from "../../services/ProductoService";
 import { getAllCategory } from "../../services/CategoryService";
+import ActionAlerts from "../ActionAlerts/ActionAlerts";
 
 const style = {
   position: "absolute",
@@ -20,13 +25,13 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
+  zIndex: 10,
 };
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -61,12 +66,19 @@ export default function ProductForm() {
   const [rows, setRow] = useState([]);
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState("");
-
+  const [editProduct, setEditProduct] = useState(false);
+  const [alert, setAlert] = useState({
+    message: "",
+    severity: "",
+  });
+  const [isActiveAlert, setIsActiveAlert] = useState(false);
   const [product, setProduct] = useState({
+    id: "",
     name: "",
     price: "",
     category: "",
     stock: "",
+    description: "",
   });
 
   const handleImageSelect = (e) => {
@@ -89,152 +101,282 @@ export default function ProductForm() {
       }
     });
   }, []);
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
 
     if (
       product.name.trim() &&
       product.price.trim() &&
-      category.trim() &&
+      product.description.trim() &&
       product.stock
     ) {
-      product.category = { id: Number(category) };
+      if (!editProduct) {
+        product.stock = Number(product.stock);
+        const formData = new FormData();
+        formData.append("name", product.name);
+        formData.append("price", product.price);
+        formData.append("description", product.description);
+        formData.append("stock", product.stock);
+        formData.append("category[id]", Number(category));
+        formData.append("image", selectedImage);
 
-      product.stock = Number(product.stock);
+        try {
+          await postProduct(formData).then((state) => {
+            if (state.statusCode === 200) {
+              setRow([...rows, state.data]);
+              setProduct({
+                ...product,
+                category: "",
+                name: "",
+                price: "",
+                stock: "",
+                description: "",
+              });
+              setAlert({
+                message: state.message,
+                severity: "success",
+              });
+              setIsActiveAlert(true);
+            }
+            if (state.statusCode === 400) {
+              setAlert({
+                message: state.message,
+                severity: "error",
+              });
+              setIsActiveAlert(true);
+            }
+          });
+        } catch (error) {
+          if (error.response) {
+            setAlert({
+              message: error.response.data.message,
+              severity: "error",
+            });
+            setIsActiveAlert(true);
+          }
+        }
+      } else {
+        product.stock = Number(product.stock);
+        const formData = new FormData();
+        formData.append("id", Number(product?.id));
+        formData.append("name", product.name);
+        formData.append("price", product.price);
+        formData.append("description", product.description);
+        formData.append("stock", product.stock);
+        formData.append("category[id]", Number(category));
+        formData.append("image", selectedImage);
 
-      const formData = new FormData();
-      formData.append("name", product.name);
-      formData.append("price", product.price);
-      formData.append("description", product.description);
-      formData.append("stock", product.stock);
-      formData.append("image", selectedImage);
-      formData.append("category", JSON.stringify(product.category));
-      console.log(JSON.stringify(product.category));
-      console.log(product.name);
+        try {
+          await updateProduct(formData).then((state) => {
+            if (state.statusCode === 200) {
+              console.log(category);
+              const newList = rows.map((item) => {
+                if (item.id === product.id) {
+                  return {
+                    id: product.id,
 
-      console.log(selectedImage);
+                    name: product.name,
 
-      postProduct(formData).then((state) => console.log(state));
+                    description: product.description,
+                    price: product.price,
+                    stock: product.stock,
+
+                    category,
+                  };
+                } else {
+                  return item;
+                }
+              });
+
+              console.log(newList);
+              setRow(newList);
+
+              // setRow([...newList]);
+
+              setProduct({
+                ...product,
+                category: "",
+                name: "",
+                price: "",
+                stock: "",
+                description: "",
+              });
+              setAlert({
+                message: state.message,
+                severity: "success",
+              });
+              setIsActiveAlert(true);
+            }
+            if (state.statusCode === 400) {
+              setAlert({
+                message: state.message,
+                severity: "error",
+              });
+              setIsActiveAlert(true);
+            }
+          });
+        } catch (error) {
+          if (error.response) {
+            setAlert({
+              message: error.response.data.message,
+              severity: "error",
+            });
+            setIsActiveAlert(true);
+          }
+        }
+      }
+    } else {
+      setAlert({
+        message: "se debe llenar todos los campos",
+        severity: "error",
+      });
+      setIsActiveAlert(true);
     }
   };
   const handleCategory = (e) => {
+    console.log(e.target.value);
     setCategory(e.target.value);
   };
-  return (
-    <div>
-      <div>
-        <div className="py-10">
-          <Button variant="contained" color="success" onClick={handleOpen}>
-            Nuevo producto
-          </Button>
-        </div>
 
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <div className="max-w-md mx-auto mt-4 p-6 bg-white rounded-lg shadow-lg">
-              <h2 className="text-2xl font-bold mb-4">Agregar Producto</h2>
-              <form onSubmit={handleSave}>
-                <div className="mb-4">
-                  <label
-                    className="block text-gray-700 font-bold mb-2"
-                    htmlFor="name"
-                  >
-                    Nombre
-                  </label>
-                  <input
-                    className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="name"
-                    value={product.name}
-                    onChange={(e) => ChangeProduct(e)}
-                    type="text"
-                    placeholder="Ingrese el nombre del producto"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label
-                    className="block text-gray-700 font-bold mb-2"
-                    htmlFor="price"
-                  >
-                    Precio
-                  </label>
-                  <input
-                    className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="price"
-                    value={product.price}
-                    onChange={(e) => ChangeProduct(e)}
-                    type="text"
-                    placeholder="Ingrese el precio del producto"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label
-                    className="block text-gray-700 font-bold mb-2"
-                    htmlFor="stock"
-                  >
-                    Stock
-                  </label>
-                  <input
-                    className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="stock"
-                    value={product.stock}
-                    onChange={(e) => ChangeProduct(e)}
-                    type="text"
-                    placeholder="Ingrese el precio del producto"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label
-                    className="block text-gray-700 font-bold mb-2"
-                    htmlFor="category"
-                  >
-                    Categoría
-                  </label>
-                  <select
-                    className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="category"
-                    value={category}
-                    onChange={(e) => handleCategory(e)}
-                  >
-                    <option>Seleccione una categoría</option>
-                    {categories?.map((category) => (
-                      <option value={category.id} key={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label
-                    className="block text-gray-700 font-bold mb-2"
-                    htmlFor="image"
-                  >
-                    Imagen
-                  </label>
-                  <input
-                    className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="image"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageSelect}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="submit"
-                  >
-                    Guardar
-                  </button>
-                </div>
-              </form>
+  const handleEdit = (product, category) => {
+    setEditProduct(true);
+    setProduct(product);
+    setCategory(product?.category.id);
+  };
+  return (
+    <div className="">
+      {isActiveAlert && (
+        <ActionAlerts
+          message={alert?.message}
+          severity={alert?.severity}
+          setIsActiveAlert={setIsActiveAlert}
+        />
+      )}
+      <div>
+        <div className=" bg-white rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold mb-4">Agregar Producto</h2>
+          <form onSubmit={handleSave}>
+            <div className="flex">
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 font-bold mb-2"
+                  htmlFor="name"
+                >
+                  Nombre
+                </label>
+                <input
+                  className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="name"
+                  value={product.name}
+                  onChange={(e) => ChangeProduct(e)}
+                  type="text"
+                  placeholder="Ingrese el nombre del producto"
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 font-bold mb-2"
+                  htmlFor="price"
+                >
+                  Precio
+                </label>
+                <input
+                  className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="price"
+                  value={product.price}
+                  onChange={(e) => ChangeProduct(e)}
+                  type="text"
+                  placeholder="Ingrese el precio del producto"
+                />
+              </div>
             </div>
-          </Box>
-        </Modal>
+            <div className="flex">
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 font-bold mb-2"
+                  htmlFor="name"
+                >
+                  Descripcion
+                </label>
+                <input
+                  className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="description"
+                  value={product.description}
+                  onChange={(e) => ChangeProduct(e)}
+                  type="text"
+                  placeholder="Ingrese una descripcion"
+                />
+              </div>
+            </div>
+
+            <div className="flex">
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 font-bold mb-2"
+                  htmlFor="stock"
+                >
+                  Stock
+                </label>
+                <input
+                  className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="stock"
+                  value={product.stock}
+                  onChange={(e) => ChangeProduct(e)}
+                  type="text"
+                  placeholder="Ingrese el stock del producto"
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 font-bold mb-2"
+                  htmlFor="category"
+                >
+                  Categoría
+                </label>
+                <select
+                  className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="category"
+                  value={category}
+                  onChange={(e) => handleCategory(e)}
+                >
+                  <option>Seleccione una categoría</option>
+                  {categories?.map((category) => (
+                    <option value={category.id} key={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="flex">
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 font-bold mb-2"
+                  htmlFor="image"
+                >
+                  Imagen
+                </label>
+                <input
+                  className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageSelect}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="submit"
+              >
+                Guardar
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -243,6 +385,7 @@ export default function ProductForm() {
               <StyledTableCell>ID</StyledTableCell>
               <StyledTableCell>Image</StyledTableCell>
               <StyledTableCell>Nombre</StyledTableCell>
+              <StyledTableCell>Descripcion</StyledTableCell>
               <StyledTableCell align="right">Precio</StyledTableCell>
               <StyledTableCell align="right">Stock</StyledTableCell>
               <StyledTableCell align="right">Categoria</StyledTableCell>
@@ -261,13 +404,20 @@ export default function ProductForm() {
                 <StyledTableCell component="th" scope="row">
                   {row.name}
                 </StyledTableCell>
+                <StyledTableCell component="th" scope="row">
+                  {row.description}
+                </StyledTableCell>
                 <StyledTableCell align="right">{row.price}</StyledTableCell>
                 <StyledTableCell align="right">{row.stock}</StyledTableCell>
                 <StyledTableCell align="right">
-                  {row.category.name}
+                  {row?.category?.name}
                 </StyledTableCell>
                 <StyledTableCell align="right">
-                  <Button variant="contained" color="success">
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() => handleEdit(row, category)}
+                  >
                     Editar
                   </Button>
                   <Button variant="outlined" color="error">
